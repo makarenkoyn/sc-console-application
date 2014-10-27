@@ -1,0 +1,17 @@
+{
+  "name": "exu/symfony2-console-standalone",
+  "description": "Symfony2 console as standalone component",
+  "authors": [
+    {
+      "name": "Jacek Wysocki",
+      "email": "jacek.wysocki@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-0": {"": "src/"}
+  },
+
+  "require": {
+    "symfony/console": "dev-master"
+  }
+}
