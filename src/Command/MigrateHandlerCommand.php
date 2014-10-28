@@ -96,7 +96,11 @@ class MigrateHandlerCommand extends Command
                 case 'attachment':
                     //Attachment (media)
 
-                    //Some code this
+                    //Add internal tag
+                    $internalTag = $item->addChild('category', '');
+                    $internalTag->addAttribute('domain', 'sc-internal-tags');
+                    $internalTag->addAttribute('nicename', 'from-the-vivant');
+                    $this->addCData($internalTag, 'from TheVivant');
 
                     break;
                 case 'post':
@@ -107,6 +111,12 @@ class MigrateHandlerCommand extends Command
                     $meta->addChild('wp:meta_key', self::NAME_POST_ID, 'wp');
                     $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
                     $this->addCData($metaValue, $postId);
+
+                    //Add internal tag
+                    $internalTag = $item->addChild('category', '');
+                    $internalTag->addAttribute('domain', 'sc-internal-tags');
+                    $internalTag->addAttribute('nicename', 'from-the-vivant');
+                    $this->addCData($internalTag, 'from TheVivant');
                     break;
                 case 'guest-author':
                     //Guest authors
@@ -179,6 +189,46 @@ class MigrateHandlerCommand extends Command
             $categoryParent->{0} = 'CHANGES_'.$categoryParent;
             $this->addCData($catName, 'CHANGES_'.$catName);
              ********************************/
+
+            switch((string)$categoryNicename) {
+                case 'dining-nightlife':
+                    unset($categoryId);
+                    $categoryNicename->{0} = 'food-and-drink';
+                    $categoryParent->{0} = 'lifestyle';
+                    $this->addCData($catName, 'Food & Drink');
+                    break;
+                case 'lifestyle-culture':
+                    unset($categoryId);
+                    $categoryNicename->{0} = 'lifestyle';
+                    $categoryParent->{0} = '';
+                    $this->addCData($catName, 'Lifestyle');
+                    break;
+                case 'art-culture':
+                    unset($categoryId);
+                    $categoryNicename->{0} = 'lifestyle';
+                    $categoryParent->{0} = '';
+                    $this->addCData($catName, 'Lifestyle');
+                    break;
+                case 'lifestyle':
+                    unset($categoryId);
+                    $categoryNicename->{0} = 'lifestyle';
+                    $categoryParent->{0} = '';
+                    $this->addCData($catName, 'Lifestyle');
+                    break;
+                case 'shopping':
+                    unset($categoryId);
+                    break;
+                case 'travel':
+                    unset($categoryId);
+                    $categoryNicename->{0} = 'lifestyle';
+                    $categoryParent->{0} = '';
+                    $this->addCData($catName, 'Lifestyle');
+                    break;
+                case 'uncategorized':
+                    break;
+                case 'video':
+                    break;
+            }
 
             /*******REMOVE TAG **************
             unset($categoryXML[0]);
@@ -256,6 +306,14 @@ class MigrateHandlerCommand extends Command
 
             $this->output->writeln('Before changes: ID: '. $termId . ', TAXONOMY: ' . $termTaxonomy . ', SLUG: ' . $termSlug . ', PARENT: ' . $termParent . ', NAME: ' . $termName . ', DESCRIPTION: ' . $termDescription );
         }
+
+        //Create Internal tag
+        $integralTag = $xml->channel->addChild('wp:term', '', 'wp');
+        $integralTag->addChild('wp:term_taxonomy', 'sc-internal-tags', 'wp');
+        $integralTag->addChild('wp:term_slug', 'from-the-vivant', 'wp');
+        $integralTag->addChild('wp:term_parent', '', 'wp');
+        $tagValue = $integralTag->addChild('wp:term_name', '', 'wp');
+        $this->addCData($tagValue, 'from TheVivant');
     }
 
     /**
