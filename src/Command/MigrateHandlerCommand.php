@@ -117,6 +117,48 @@ class MigrateHandlerCommand extends Command
                     $internalTag->addAttribute('domain', 'sc-internal-tags');
                     $internalTag->addAttribute('nicename', 'from-the-vivant');
                     $this->addCData($internalTag, 'from TheVivant');
+
+                    //Reassigning categories
+                    //<category domain="category" nicename="lifestyle"><![CDATA[Lifestyle]]></category>
+                    foreach ( $item->category as $categoryTag)
+                    {
+                        if ($categoryTag->attributes()->domain  == 'category')
+                        {
+                            $oldNicename = (string)$categoryTag->attributes()->nicename;
+
+                            switch((string)$oldNicename) {
+                                case 'dining-nightlife':
+                                    $this->addCData($categoryTag, 'Food & Drink');
+                                    $categoryTag->attributes()->nicename = 'food-and-drink';
+                                    break;
+                                case 'lifestyle-culture':
+                                    $this->addCData($categoryTag, 'Lifestyle');
+                                    $categoryTag->attributes()->nicename = 'lifestyle';
+                                    break;
+                                case 'art-culture':
+                                    $this->addCData($categoryTag, 'Lifestyle');
+                                    $categoryTag->attributes()->nicename = 'lifestyle';
+                                    break;
+                                case 'lifestyle':
+                                    $this->addCData($categoryTag, 'Lifestyle');
+                                    $categoryTag->attributes()->nicename = 'lifestyle';
+                                    break;
+                                case 'shopping':
+                                    break;
+                                case 'travel':
+                                    $this->addCData($categoryTag, 'Lifestyle');
+                                    $categoryTag->attributes()->nicename = 'lifestyle';
+                                    break;
+                                case 'uncategorized':
+                                    break;
+                                case 'video':
+                                    $this->addCData($categoryTag, 'Uncategorized');
+                                    $categoryTag->attributes()->nicename = 'uncategorized';
+                                    break;
+                            }
+                        }
+                    }
+
                     break;
                 case 'guest-author':
                     //Guest authors
@@ -190,52 +232,38 @@ class MigrateHandlerCommand extends Command
             $this->addCData($catName, 'CHANGES_'.$catName);
              ********************************/
 
-            switch((string)$categoryNicename) {
-                case 'dining-nightlife':
-                    unset($categoryId);
-                    $categoryNicename->{0} = 'food-and-drink';
-                    $categoryParent->{0} = 'lifestyle';
-                    $this->addCData($catName, 'Food & Drink');
-                    break;
-                case 'lifestyle-culture':
-                    unset($categoryId);
-                    $categoryNicename->{0} = 'lifestyle';
-                    $categoryParent->{0} = '';
-                    $this->addCData($catName, 'Lifestyle');
-                    break;
-                case 'art-culture':
-                    unset($categoryId);
-                    $categoryNicename->{0} = 'lifestyle';
-                    $categoryParent->{0} = '';
-                    $this->addCData($catName, 'Lifestyle');
-                    break;
-                case 'lifestyle':
-                    unset($categoryId);
-                    $categoryNicename->{0} = 'lifestyle';
-                    $categoryParent->{0} = '';
-                    $this->addCData($catName, 'Lifestyle');
-                    break;
-                case 'shopping':
-                    unset($categoryId);
-                    break;
-                case 'travel':
-                    unset($categoryId);
-                    $categoryNicename->{0} = 'lifestyle';
-                    $categoryParent->{0} = '';
-                    $this->addCData($catName, 'Lifestyle');
-                    break;
-                case 'uncategorized':
-                    break;
-                case 'video':
-                    break;
-            }
-
             /*******REMOVE TAG **************
             unset($categoryXML[0]);
             //********************************/
+            unset($categoryXML[0]);
 
             $this->output->writeln('Before changes: ID: '. $categoryId . ', NICENAME: ' . $categoryNicename . ', PARENT: ' . $categoryParent . ', NAME: ' . $catName);
         }
+
+        //Create categories
+        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
+        $newCategory->addChild('wp:category_nicename', 'lifestyle', 'wp');
+        $newCategory->addChild('wp:category_parent', '', 'wp');
+        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $this->addCData($catName, 'Lifestyle');
+
+        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
+        $newCategory->addChild('wp:category_nicename', 'food-and-drink', 'wp');
+        $newCategory->addChild('wp:category_parent', 'lifestyle', 'wp');
+        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $this->addCData($catName, 'Food & Drink');
+
+        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
+        $newCategory->addChild('wp:category_nicename', 'shopping', 'wp');
+        $newCategory->addChild('wp:category_parent', '', 'wp');
+        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $this->addCData($catName, 'Shopping');
+
+        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
+        $newCategory->addChild('wp:category_nicename', 'uncategorized', 'wp');
+        $newCategory->addChild('wp:category_parent', '', 'wp');
+        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $this->addCData($catName, 'Uncategorized');
     }
 
     /**
