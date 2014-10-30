@@ -15,6 +15,9 @@ class MigrateHandlerCommand extends Command
      * Name post id in meta
      */
     const NAME_POST_ID = 'TV_POST_ID';
+    const NAME_ATTACHMENT_ID = 'TV_ATTACHMENT_ID';
+    const NAME_POST_URL = 'TV_POST_URL';
+    const NAME_ATTACHMENT_URL = 'TV_ATTACHMENT_URL';
 
     /**
      * OutputInterface
@@ -68,7 +71,7 @@ class MigrateHandlerCommand extends Command
 
         //Save
         $dom = dom_import_simplexml($xml)->ownerDocument;
-        $dom->formatOutput = true;;
+        $dom->formatOutput = true;
         $outputXMLArray = explode(PHP_EOL, $dom->saveXML());
 
         foreach ($outputXMLArray as $key => $row) {
@@ -91,10 +94,24 @@ class MigrateHandlerCommand extends Command
         foreach ($xml->channel->xpath('//item') as $item) {
             $postType = isset($item->xpath('wp:post_type')[0]) ? (string)$item->xpath('wp:post_type')[0] : false;
             $postId = (string)$item->xpath('wp:post_id')[0];
+            $postUrl = (string)$item->xpath('link')[0];
+            $postGuid = (string)$item->xpath('guid')[0];
+
             $this->output->writeln('Post type: ' . $postType . ', ID: ' . $postId);
             switch ($postType) {
                 case 'attachment':
                     //Attachment (media)
+
+                    //Add id to meta
+                    $meta = $item->addChild('wp:postmeta', '', 'wp');
+                    $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_ID, 'wp');
+                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $this->addCData($metaValue, $postId);
+                    //Add url to meta
+                    $meta = $item->addChild('wp:postmeta', '', 'wp');
+                    $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_URL, 'wp');
+                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $this->addCData($metaValue, $postGuid);
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
@@ -111,6 +128,11 @@ class MigrateHandlerCommand extends Command
                     $meta->addChild('wp:meta_key', self::NAME_POST_ID, 'wp');
                     $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
                     $this->addCData($metaValue, $postId);
+                    //Add url to meta
+                    $meta = $item->addChild('wp:postmeta', '', 'wp');
+                    $meta->addChild('wp:meta_key', self::NAME_POST_URL, 'wp');
+                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $this->addCData($metaValue, $postUrl);
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
