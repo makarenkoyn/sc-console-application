@@ -11,13 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateHandlerCommand extends Command
 {
-    /**
-     * Name post id in meta
-     */
-    const NAME_POST_ID = 'TV_POST_ID';
-    const NAME_ATTACHMENT_ID = 'TV_ATTACHMENT_ID';
-    const NAME_POST_URL = 'TV_POST_URL';
-    const NAME_ATTACHMENT_URL = 'TV_ATTACHMENT_URL';
+    const NAME_POST_ID = 'TV_POST_ID';                   //Name post id in meta
+    const NAME_POST_URL = 'TV_POST_URL';                 //Name post url in meta
+    const NAME_ATTACHMENT_ID = 'TV_ATTACHMENT_ID';       //Name attachment id in meta
+    const NAME_ATTACHMENT_URL = 'TV_ATTACHMENT_URL';     //Name attachment url in meta
 
     /**
      * OutputInterface
@@ -107,6 +104,7 @@ class MigrateHandlerCommand extends Command
                     $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_ID, 'wp');
                     $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
                     $this->addCData($metaValue, $postId);
+
                     //Add url to meta
                     $meta = $item->addChild('wp:postmeta', '', 'wp');
                     $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_URL, 'wp');
@@ -128,6 +126,7 @@ class MigrateHandlerCommand extends Command
                     $meta->addChild('wp:meta_key', self::NAME_POST_ID, 'wp');
                     $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
                     $this->addCData($metaValue, $postId);
+                    
                     //Add url to meta
                     $meta = $item->addChild('wp:postmeta', '', 'wp');
                     $meta->addChild('wp:meta_key', self::NAME_POST_URL, 'wp');
