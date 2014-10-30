@@ -11,10 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateHandlerCommand extends Command
 {
-    const NAME_POST_ID = 'TV_POST_ID';                   //Name post id in meta
-    const NAME_POST_URL = 'TV_POST_URL';                 //Name post url in meta
-    const NAME_ATTACHMENT_ID = 'TV_ATTACHMENT_ID';       //Name attachment id in meta
-    const NAME_ATTACHMENT_URL = 'TV_ATTACHMENT_URL';     //Name attachment url in meta
+    const NAME_POST_ID = 'tv_post_id';                   //Name post id in meta
+    const NAME_POST_URL = 'tv_post_url';                 //Name post url in meta
+    const NAME_ATTACHMENT_ID = 'tv_attachment_id';       //Name attachment id in meta
+    const NAME_ATTACHMENT_URL = 'tv_attachment_url';     //Name attachment url in meta
 
     /**
      * OutputInterface
@@ -100,15 +100,15 @@ class MigrateHandlerCommand extends Command
                     //Attachment (media)
 
                     //Add id to meta
-                    $meta = $item->addChild('wp:postmeta', '', 'wp');
-                    $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_ID, 'wp');
-                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $meta = $item->addChild('wp:wp:postmeta', '');
+                    $meta->addChild('wp:wp:meta_key', self::NAME_ATTACHMENT_ID);
+                    $metaValue = $meta->addChild('wp:wp:meta_value', '');
                     $this->addCData($metaValue, $postId);
 
                     //Add url to meta
-                    $meta = $item->addChild('wp:postmeta', '', 'wp');
-                    $meta->addChild('wp:meta_key', self::NAME_ATTACHMENT_URL, 'wp');
-                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $meta = $item->addChild('wp:wp:postmeta', '');
+                    $meta->addChild('wp:wp:meta_key', self::NAME_ATTACHMENT_URL);
+                    $metaValue = $meta->addChild('wp:wp:meta_value', '');
                     $this->addCData($metaValue, $postGuid);
 
                     //Add internal tag
@@ -122,15 +122,15 @@ class MigrateHandlerCommand extends Command
                     //Single post
 
                     //Add id to meta
-                    $meta = $item->addChild('wp:postmeta', '', 'wp');
-                    $meta->addChild('wp:meta_key', self::NAME_POST_ID, 'wp');
-                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $meta = $item->addChild('wp:wp:postmeta', '');
+                    $meta->addChild('wp:wp:meta_key', self::NAME_POST_ID);
+                    $metaValue = $meta->addChild('wp:wp:meta_value', '');
                     $this->addCData($metaValue, $postId);
-                    
+
                     //Add url to meta
-                    $meta = $item->addChild('wp:postmeta', '', 'wp');
-                    $meta->addChild('wp:meta_key', self::NAME_POST_URL, 'wp');
-                    $metaValue = $meta->addChild('wp:meta_value', '', 'wp');
+                    $meta = $item->addChild('wp:wp:postmeta', '');
+                    $meta->addChild('wp:wp:meta_key', self::NAME_POST_URL);
+                    $metaValue = $meta->addChild('wp:wp:meta_value', '');
                     $this->addCData($metaValue, $postUrl);
 
                     //Add internal tag
@@ -262,28 +262,28 @@ class MigrateHandlerCommand extends Command
         }
 
         //Create categories
-        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
-        $newCategory->addChild('wp:category_nicename', 'lifestyle', 'wp');
-        $newCategory->addChild('wp:category_parent', '', 'wp');
-        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $newCategory = $xml->channel->addChild('wp:wp:category', '');
+        $newCategory->addChild('wp:wp:category_nicename', 'lifestyle');
+        $newCategory->addChild('wp:wp:category_parent', '');
+        $catName = $newCategory->addChild('wp:wp:cat_name', '');
         $this->addCData($catName, 'Lifestyle');
 
-        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
-        $newCategory->addChild('wp:category_nicename', 'food-and-drink', 'wp');
-        $newCategory->addChild('wp:category_parent', 'lifestyle', 'wp');
-        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $newCategory = $xml->channel->addChild('wp:wp:category', '');
+        $newCategory->addChild('wp:wp:category_nicename', 'food-and-drink');
+        $newCategory->addChild('wp:wp:category_parent', 'lifestyle');
+        $catName = $newCategory->addChild('wp:wp:cat_name', '');
         $this->addCData($catName, 'Food & Drink');
 
-        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
-        $newCategory->addChild('wp:category_nicename', 'shopping', 'wp');
-        $newCategory->addChild('wp:category_parent', '', 'wp');
-        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $newCategory = $xml->channel->addChild('wp:wp:category', '');
+        $newCategory->addChild('wp:wp:category_nicename', 'shopping');
+        $newCategory->addChild('wp:wp:category_parent', '');
+        $catName = $newCategory->addChild('wp:wp:cat_name', '');
         $this->addCData($catName, 'Shopping');
 
-        $newCategory = $xml->channel->addChild('wp:category', '', 'wp');
-        $newCategory->addChild('wp:category_nicename', 'uncategorized', 'wp');
-        $newCategory->addChild('wp:category_parent', '', 'wp');
-        $catName = $newCategory->addChild('wp:cat_name', '', 'wp');
+        $newCategory = $xml->channel->addChild('wp:wp:category', '');
+        $newCategory->addChild('wp:wp:category_nicename', 'uncategorized');
+        $newCategory->addChild('wp:wp:category_parent', '');
+        $catName = $newCategory->addChild('wp:wp:cat_name', '');
         $this->addCData($catName, 'Uncategorized');
     }
 
@@ -357,11 +357,11 @@ class MigrateHandlerCommand extends Command
         }
 
         //Create Internal tag
-        $integralTag = $xml->channel->addChild('wp:term', '', 'wp');
-        $integralTag->addChild('wp:term_taxonomy', 'sc-internal-tags', 'wp');
-        $integralTag->addChild('wp:term_slug', 'from-the-vivant', 'wp');
-        $integralTag->addChild('wp:term_parent', '', 'wp');
-        $tagValue = $integralTag->addChild('wp:term_name', '', 'wp');
+        $integralTag = $xml->channel->addChild('wp:wp:term', '');
+        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-internal-tags');
+        $integralTag->addChild('wp:wp:term_slug', 'from-the-vivant');
+        $integralTag->addChild('wp:wp:term_parent', '');
+        $tagValue = $integralTag->addChild('wp:wp:term_name', '');
         $this->addCData($tagValue, 'from TheVivant');
     }
 
