@@ -11,10 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrateHandlerCommand extends Command
 {
-    const NAME_POST_ID = 'tv_post_id';                   //Name post id in meta
-    const NAME_POST_URL = 'tv_post_url';                 //Name post url in meta
-    const NAME_ATTACHMENT_ID = 'tv_attachment_id';       //Name attachment id in meta
-    const NAME_ATTACHMENT_URL = 'tv_attachment_url';     //Name attachment url in meta
+    const NAME_POST_ID = 'tv2sc_tv_post_id';                   //Name post id in meta
+    const NAME_POST_URL = 'tv2sc_tv_post_url';                 //Name post url in meta
+    const NAME_ATTACHMENT_ID = 'tv2sc_tv_attachment_id';       //Name attachment id in meta
+    const NAME_ATTACHMENT_URL = 'tv2sc_tv_attachment_url';     //Name attachment url in meta
 
     /**
      * OutputInterface
@@ -113,9 +113,9 @@ class MigrateHandlerCommand extends Command
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
-                    $internalTag->addAttribute('domain', 'sc-internal-tags');
-                    $internalTag->addAttribute('nicename', 'from-the-vivant');
-                    $this->addCData($internalTag, 'from TheVivant');
+                    $internalTag->addAttribute('domain', 'sc-media-internal-tags');
+                    $internalTag->addAttribute('nicename', 'the-vivant-media');
+                    $this->addCData($internalTag, 'TheVivant media');
 
                     break;
                 case 'post':
@@ -135,9 +135,9 @@ class MigrateHandlerCommand extends Command
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
-                    $internalTag->addAttribute('domain', 'sc-internal-tags');
-                    $internalTag->addAttribute('nicename', 'from-the-vivant');
-                    $this->addCData($internalTag, 'from TheVivant');
+                    $internalTag->addAttribute('domain', 'sc-post-internal-tags');
+                    $internalTag->addAttribute('nicename', 'the-vivant-posts');
+                    $this->addCData($internalTag, 'TheVivant posts');
 
                     //Reassigning categories
                     //<category domain="category" nicename="lifestyle"><![CDATA[Lifestyle]]></category>
@@ -256,6 +256,8 @@ class MigrateHandlerCommand extends Command
             /*******REMOVE TAG **************
             unset($categoryXML[0]);
             //********************************/
+
+            //Remove all categories
             unset($categoryXML[0]);
 
             $this->output->writeln('Before changes: ID: '. $categoryId . ', NICENAME: ' . $categoryNicename . ', PARENT: ' . $categoryParent . ', NAME: ' . $catName);
@@ -356,13 +358,20 @@ class MigrateHandlerCommand extends Command
             $this->output->writeln('Before changes: ID: '. $termId . ', TAXONOMY: ' . $termTaxonomy . ', SLUG: ' . $termSlug . ', PARENT: ' . $termParent . ', NAME: ' . $termName . ', DESCRIPTION: ' . $termDescription );
         }
 
-        //Create Internal tag
+        //Create Internal tags
         $integralTag = $xml->channel->addChild('wp:wp:term', '');
-        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-internal-tags');
-        $integralTag->addChild('wp:wp:term_slug', 'from-the-vivant');
+        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-post-internal-tags');
+        $integralTag->addChild('wp:wp:term_slug', 'the-vivant-posts');
         $integralTag->addChild('wp:wp:term_parent', '');
         $tagValue = $integralTag->addChild('wp:wp:term_name', '');
-        $this->addCData($tagValue, 'from TheVivant');
+        $this->addCData($tagValue, 'TheVivant posts');
+
+        $integralTag = $xml->channel->addChild('wp:wp:term', '');
+        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-media-internal-tags');
+        $integralTag->addChild('wp:wp:term_slug', 'the-vivant-media');
+        $integralTag->addChild('wp:wp:term_parent', '');
+        $tagValue = $integralTag->addChild('wp:wp:term_name', '');
+        $this->addCData($tagValue, 'TheVivant media');
     }
 
     /**
