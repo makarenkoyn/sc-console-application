@@ -113,7 +113,7 @@ class MigrateHandlerCommand extends Command
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
-                    $internalTag->addAttribute('domain', 'sc-media-internal-tags');
+                    $internalTag->addAttribute('domain', 'sc_media_internal_tags');
                     $internalTag->addAttribute('nicename', 'the-vivant-media');
                     $this->addCData($internalTag, 'TheVivant media');
 
@@ -135,7 +135,7 @@ class MigrateHandlerCommand extends Command
 
                     //Add internal tag
                     $internalTag = $item->addChild('category', '');
-                    $internalTag->addAttribute('domain', 'sc-post-internal-tags');
+                    $internalTag->addAttribute('domain', 'sc_post_internal_tags');
                     $internalTag->addAttribute('nicename', 'the-vivant-posts');
                     $this->addCData($internalTag, 'TheVivant posts');
 
@@ -360,14 +360,14 @@ class MigrateHandlerCommand extends Command
 
         //Create Internal tags
         $integralTag = $xml->channel->addChild('wp:wp:term', '');
-        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-post-internal-tags');
+        $integralTag->addChild('wp:wp:term_taxonomy', 'sc_post_internal_tags');
         $integralTag->addChild('wp:wp:term_slug', 'the-vivant-posts');
         $integralTag->addChild('wp:wp:term_parent', '');
         $tagValue = $integralTag->addChild('wp:wp:term_name', '');
         $this->addCData($tagValue, 'TheVivant posts');
 
         $integralTag = $xml->channel->addChild('wp:wp:term', '');
-        $integralTag->addChild('wp:wp:term_taxonomy', 'sc-media-internal-tags');
+        $integralTag->addChild('wp:wp:term_taxonomy', 'sc_media_internal_tags');
         $integralTag->addChild('wp:wp:term_slug', 'the-vivant-media');
         $integralTag->addChild('wp:wp:term_parent', '');
         $tagValue = $integralTag->addChild('wp:wp:term_name', '');
