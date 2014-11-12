@@ -99,7 +99,8 @@ class CreateSmartGalleriesBackupCommand extends Command
                                 if ($image_data) {
                                     $finfo = new \finfo(FILEINFO_MIME);
                                     $mime = strstr($finfo->buffer($image_data), ';', true);
-                                    $extension = '.' . explode('/', $mime)[1];
+                                    $ext_array = explode('/', $mime);
+                                    $extension = '.' . $ext_array[1];
                                     $filename = $image_guid . $extension;
 
                                     file_put_contents($gallery_dir . '/' . $filename, $image_data);
